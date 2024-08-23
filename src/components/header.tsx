@@ -55,7 +55,7 @@ const Header: FC = () => {
             )
         },
         {
-            key: '4',
+            key: '5',
             label: (
                 <a onClick={() => router.push('/legal?policy=shipping')} target="_blank" rel="noopener noreferrer" >
                     Shipping policy
@@ -63,7 +63,7 @@ const Header: FC = () => {
             )
         },
         {
-            key: '4',
+            key: '6',
             label: (
                 <a onClick={() => router.push('/legal?policy=warranty')} target="_blank" rel="noopener noreferrer" >
                     Warranty policy

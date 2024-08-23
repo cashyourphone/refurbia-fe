@@ -1,10 +1,12 @@
 import Legal from '@/components/legal';
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 
 const Home: FC = () => {
     return (
         <div className='p-5 flex justify-center items-center'>
-            <Legal/>
+            <Suspense>
+                <Legal />
+            </Suspense>
         </div>
     );
 };

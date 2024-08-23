@@ -267,7 +267,7 @@ const Hero: React.FC = () => {
                     })}
             >
                 {allBrands.map((brand: any) => (
-                    <Grid>
+                    <Grid key={brand.id}>
                         <Box
                             key={brand.id}
                             className="hover:cursor-pointer"

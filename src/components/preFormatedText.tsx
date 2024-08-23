@@ -19,7 +19,7 @@ const PreformattedText: React.FC<Props> = ({url}) => {
                 setLoading(false)
             })
             .catch(error => console.error('Error fetching text file:', error));
-    }, []);
+    }, [url]);
 
     if (loading) {
         return (
