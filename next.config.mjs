@@ -1,7 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains:['s3b.refurbia.in','refurbia.in']
+        remotePatterns: [
+            {
+                protocol: 'http',
+                hostname: 's3b.refurbia.in',
+                pathname:'**'
+            },
+            {
+                protocol: 'http',
+                hostname: 'refurbia.in',
+                pathname: '**'
+            }
+        ]
     }
 };
 
