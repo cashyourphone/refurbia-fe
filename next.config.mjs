@@ -3,12 +3,12 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: 'http',
+                protocol: 'https',
                 hostname: 's3b.refurbia.in',
                 pathname:'**'
             },
             {
-                protocol: 'http',
+                protocol: 'https',
                 hostname: 'refurbia.in',
                 pathname: '**'
             }
