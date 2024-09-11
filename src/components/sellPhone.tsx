@@ -18,7 +18,7 @@ interface PaymentDetails {
 
 const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
     const [payment, setPayment] = useState<PaymentDetails>({ upiId: "", paymentMethod: 'cash' });
-    const [address, setAddress] = useState<Address>({ name: "", address: "", locality: "", landmark: "", pincode: 0 });
+    const [address, setAddress] = useState<Address>({ name: "", address: "", locality: "", landmark: "", pincode: NaN });
     const [expanded, setExpanded] = useState<string | false>('addressPanel');
     const router = useRouter()
     const dispatch = useAppDispatch();

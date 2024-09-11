@@ -75,7 +75,6 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
             ((event as React.KeyboardEvent).key === 'Tab' ||
                 (event as React.KeyboardEvent).key === 'Shift')
         ) {
-            console.log("in event")
             return;
         }
 
@@ -95,7 +94,6 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
         setDrawerOpen(false)
     }
 
-    console.log(questions)
 
     return (
         <>

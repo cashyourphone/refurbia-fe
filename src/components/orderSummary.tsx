@@ -16,7 +16,7 @@ const CustomCard = styled(Card)({
 const OrderSummaryComponent: FC = () => {
     const router = useRouter()
     const mobileDetails = useAppSelector((state) => state?.mobile?.mobileData);
-    const orderDetails = useAppSelector((state) => state.order.orderData);
+    const orderDetails = useAppSelector((state) => state?.order?.orderData);
     return (
         <Container>
             <Typography variant="h4" gutterBottom className="p-8">
