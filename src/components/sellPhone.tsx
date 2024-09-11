@@ -151,7 +151,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                     onChange={(e) => handleAddressChange(e.target.value)}
                                     fullWidth
                                 />
-                                <Button disabled={!(address?.address && address?.name && address?.pincode.toString().length === 6)} variant="contained" color="primary" onClick={handleAddressSubmit}>
+                                <Button disabled={!(address?.address && address?.name && address?.pincode?.toString().length === 6)} variant="contained" color="primary" onClick={handleAddressSubmit}>
                                     Save Address
                                 </Button>
                             </div>

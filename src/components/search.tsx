@@ -71,7 +71,7 @@ const Search: React.FC<SearchProps> = ({className}) => {
 
     const handleClick = (phone:any) => {
         const params = new URLSearchParams({ id: phone._id });
-        router.push(`/${phone.brandName.toLowerCase()}/${phone.modelName}?${params.toString()}`);
+        router.push(`/${phone.brandName.toLowerCase()}/${phone.modelName}?${params?.toString()}`);
     }
     return (
         <div className={className}>
