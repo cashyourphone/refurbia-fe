@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 
 interface SellMobileProps {
-    handleOrderCreate : (order:OrderData)=> Promise<void>
+    handleOrderCreate: (order: OrderData) => Promise<void>
 }
 
 interface PaymentDetails {
@@ -16,8 +16,8 @@ interface PaymentDetails {
     upiId: string;
 }
 
-const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
-    const [payment, setPayment] = useState<PaymentDetails>({upiId:"", paymentMethod:'cash'});
+const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
+    const [payment, setPayment] = useState<PaymentDetails>({ upiId: "", paymentMethod: 'cash' });
     const [address, setAddress] = useState<Address>({ name: "", address: "", locality: "", landmark: "", pincode: 0 });
     const [expanded, setExpanded] = useState<string | false>('addressPanel');
     const router = useRouter()
@@ -27,7 +27,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
 
     useEffect(() => {
         setAddress(orderSelector?.address as Address);
-    },[])
+    }, [])
 
     const handleAccordionChange =
         (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -37,14 +37,14 @@ const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
     const handleAddressChange = (e: any) => {
         setAddress({
             ...address,
-            [e.target.name]: e.target.value,
+            [e?.target?.name]: e.target.value,
         });
     };
 
     const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPayment({
             ...payment,
-            [e.target.name]: e.target.value,
+            [e?.target?.name]: e.target.value,
         });
     };
 
@@ -53,7 +53,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
         const value = target.value;
 
         if (value.length > 6) {
-            target.value = value.slice(0, 6); 
+            target.value = value.slice(0, 6);
         }
     };
 
@@ -72,7 +72,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
             paymentDetails: payment
         }
 
-        const orderResponse:any = await handleOrderCreate(orderDetails);
+        const orderResponse: any = await handleOrderCreate(orderDetails);
         if (orderResponse?.status === 200) {
             router.push('/order')
         }
@@ -103,7 +103,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
                 <div className="lg:w-2/3 w-full">
                     {/* Address Accordion */}
                     <Accordion expanded={expanded === 'addressPanel'} onChange={handleAccordionChange('addressPanel')}>
-                        <AccordionSummary expandIcon={<ExpandMore/>}>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
                             <Typography variant="h6" className="font-semibold">Address Details</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -111,7 +111,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
                                 <TextField
                                     label="Name"
                                     name="name"
-                                    value={address.name}
+                                    value={address?.name}
                                     onChange={handleAddressChange}
                                     fullWidth
                                 />
@@ -151,7 +151,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
                                     onChange={(e) => handleAddressChange(e.target.value)}
                                     fullWidth
                                 />
-                                <Button disabled={!(address.address && address.name && address.pincode.toString().length ===6)} variant="contained" color="primary" onClick={handleAddressSubmit}>
+                                <Button disabled={!(address?.address && address?.name && address?.pincode.toString().length === 6)} variant="contained" color="primary" onClick={handleAddressSubmit}>
                                     Save Address
                                 </Button>
                             </div>
@@ -160,7 +160,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({handleOrderCreate}) => {
 
                     {/* Payment Accordion */}
                     <Accordion className="mt-4" expanded={expanded === 'paymentPanel'} onChange={handleAccordionChange('paymentPanel')}>
-                        <AccordionSummary expandIcon={<ExpandMore/>}>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
                             <Typography variant="h6" className="font-semibold">Payment Details</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
