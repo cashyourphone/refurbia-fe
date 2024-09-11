@@ -17,6 +17,9 @@ const config: Config = {
         "primary": "#6650a4",
         "white":"#fdfefe"
       },
+      borderColor: {
+        "primary":"#6650a4"
+      },
       keyframes: {
         bounce: {
           '0%, 100%': { transform: 'translateY(0)' },

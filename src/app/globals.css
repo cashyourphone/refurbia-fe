@@ -38,6 +38,10 @@ html {
     ;
 }
 
+.border-white {
+    border-color: white !important;
+}
+
 @media (min-width: 900px) {
     .leading-cs-10 {
         line-height: 10rem;

@@ -1,16 +1,30 @@
 "use client";
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Collapse, AppBar } from '@mui/material';
+import { Collapse, AppBar, Button, Chip } from '@mui/material';
 import { Dropdown } from 'antd';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import LoginModal from './loginModal';
+import { isLoggedIn } from '@/utils/auth';
+
+
+
 
 const Header: FC = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [isAboutOpen, setIsAboutOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
     const router = useRouter();
+    const pathname = usePathname();
+    const isHome = pathname === '/';
 
+    useEffect(() => {
+        const loggedInStatus = isLoggedIn();
+        setLoggedIn(loggedInStatus);
+    }, [isLoggedIn()]);
+    
     const handleClick = () => {
         setIsOpen(prev => !prev)
         setIsAboutOpen(false)
@@ -20,6 +34,13 @@ const Header: FC = () => {
         setIsAboutOpen(prev => !prev)
     }
 
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     const items: any = [
         {
@@ -72,6 +93,14 @@ const Header: FC = () => {
         }
     ]
 
+    const getLoginProfileButton = () => {
+        if (loggedIn) {
+            return (<Chip onClick={handleOpenModal} label="Profile" className='text-white w-20 border-white' variant="outlined" />)
+        } else {
+            return (<Chip onClick={handleOpenModal} label="Login" className='text-white w-20 border-white' variant="outlined" />)
+        }
+    }
+
     return (
         <AppBar
             position="fixed"
@@ -81,7 +110,7 @@ const Header: FC = () => {
             }}>
             <nav className="container mx-auto items-center py-4 px-6 md:flex">
                 <div className='flex justify-between w-full'>
-                    <div className="flex items-center">
+                    <div onClick={()=> router.push('/')} className="flex items-center hover:cursor-pointer">
                         <Image src="/icon.png" width={50} height={50} alt="App Icon" />
                         <span className="text-2xl text-primary font-bold">₹efurbia</span>
                     </div>
@@ -97,9 +126,8 @@ const Header: FC = () => {
                     </div>
                 </div>
                 <Collapse className='md:h-auto md:flex md:items-center visible md:overflow-visible' in={isOpen}>
-                    <ul className="flex items-end justify-center flex-col md:flex-row md:space-x-6">
-                        <li className='pt-2 md:pt-0'><a onClick={() => router.push('/')} className="text-white pt-2 hover:cursor-pointer md:pt-0 hover:text-primary hover:font-medium underline underline-offset-8">Home</a></li>
-                        <li className='pt-2 md:pt-0'><a onClick={() => router.push('/')} className="text-white pt-2 hover:cursor-pointer md:pt-0 hover:text-primary hover:font-medium underline underline-offset-8">Sell</a></li>
+                    <ul className="flex items-end justify-center flex-col md:items-center md:flex-row md:space-x-6">
+                        {!isHome && <li className='pt-2 md:pt-0'><a onClick={() => router.push('/')} className="text-white pt-2 hover:cursor-pointer md:pt-0 hover:text-primary hover:font-medium underline underline-offset-8">Sell</a></li>}
                         <li className='pt-2 md:pt-0'>
                             <Dropdown className='hidden md:block' menu={{ items }} placement="bottom" arrow={{ pointAtCenter: true }}>
                                 <span className="text-white hover:cursor-pointer hover:text-primary hover:font-medium text-nowrap underline underline-offset-8"> About us </span>
@@ -112,8 +140,12 @@ const Header: FC = () => {
                             </Collapse>
                         </li>
                         <li className='pt-2 md:pt-0'><a href="#contacts" className="text-white hover:text-primary hover:font-medium underline underline-offset-8">Contact</a></li>
+                        <li className='pt-4 md:pt-0'>{
+                             getLoginProfileButton()   
+                        }</li>
                     </ul>
                 </Collapse>
+                <LoginModal open={isModalOpen} onClose={handleCloseModal} />
                 {/* <div className={`overflow-hidden md:overflow-visible md:max-h-10 ${isOpen ? 'max-h-40 transition-all duration-500 ease-in-out' : 'max-h-0 '} `}>
                     <ul className="flex items-end justify-center flex-col md:flex-row md:space-x-6">
                         <li><a  className="text-white hover:text-primary hover:font-medium">Sell</a></li>

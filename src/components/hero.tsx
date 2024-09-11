@@ -1,37 +1,32 @@
-"use client";
+'use client'
 import * as React from 'react';
 import { Divider, Grid, alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { TypeAnimation } from 'react-type-animation';
-import { AltRoute, ExpandMore } from '@mui/icons-material';
+import { ExpandMore } from '@mui/icons-material';
 import Image from 'next/image';
 import { baseUrl, s3BaseUrl, version } from '@/config/config';
 import Search from '@/components/search'
+import { useRouter } from 'next/navigation';
 
-const Hero: React.FC = () => {
+interface Brand {
+    id: number;
+    name: string;
+    code: string;
+}
+
+interface HeroProps {
+    allBrands: Brand[];
+}
+
+const Hero: React.FC<HeroProps> = ({ allBrands }) => {
     const brandImageName = ['apple', 'samsung', 'google', 'oneplus'];
-    const [allBrands, setAllBrands] = React.useState([]);
+    const router = useRouter();
 
-    React.useEffect(() => {
-        fetch(`${baseUrl}/${version}/mobile/get-brands`)
-            .then((res) => res.json())
-            .then((data: any) => {
-                const resBrand = data.data.map((brand: { id: any; name: any; code: any; }) => {
-                    return {
-                        id: brand.id,
-                        name: brand.name,
-                        code: brand.code
-                    }
-                })
-                setAllBrands(resBrand);
-            });
-    }, [])
-    
-    const scrollToSection = (id:any) => {
+    const scrollToSection = (id: string) => {
         const section = document.getElementById(id);
         if (section) {
             section.scrollIntoView({ behavior: 'smooth' });
@@ -55,35 +50,36 @@ const Hero: React.FC = () => {
                 }}
             >
                 <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
-                    
-                        <TypeAnimation
-                            sequence={[
-                                'Best market value',
-                                1500, 
-                                'Get instant quote',
-                                1500,
-                                'One day pick up',
-                                1500,
-                                `Receive instant payment`,
-                                1500
-                            ]}
-                            className='text-primary'
-                            wrapper="span"
-                            speed={5}
-                            style={{
-                                display: 'inline-block',
-                                alignSelf: 'center',
-                                textAlign: 'center',
-                                fontSize: 'clamp(2rem, 5vw, 3.5rem)', }}
-                            repeat={Infinity}
-                        />
-      
+
+                    <TypeAnimation
+                        sequence={[
+                            'Best market value',
+                            1500,
+                            'Get instant quote',
+                            1500,
+                            'One day pick up',
+                            1500,
+                            `Receive instant payment`,
+                            1500
+                        ]}
+                        className='text-primary'
+                        wrapper="span"
+                        speed={5}
+                        style={{
+                            display: 'inline-block',
+                            alignSelf: 'center',
+                            textAlign: 'center',
+                            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                        }}
+                        repeat={Infinity}
+                    />
+
                     <Typography
                         textAlign="center"
                         color="text.secondary"
                         sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
                     >
-                        we are dedicated to making technology accessible and sustainable. We buy old phones and give them a new life.
+                        We are dedicated to making technology accessible and sustainable. We buy old phones and give them a new life.
                     </Typography>
                     <Stack
                         className='md:w-full'
@@ -94,23 +90,7 @@ const Hero: React.FC = () => {
                         useFlexGap
                         sx={{ pt: 2, width: '100%' }}
                     >
-                        <Search className="w-full"/>
-                        {/* <TextField
-                            id="outlined-basic"
-                            className='w-full'
-                            hiddenLabel
-                            size="small"
-                            variant="outlined"
-                            aria-label="Search your phone"
-                            placeholder="Search your phone"
-                            sx={{
-                                boxShadow: `0 0 12px 8px ${alpha('#CCC2DC', 0.4)}`
-                            }}
-                            inputProps={{
-                                autoComplete: 'off',
-                                'aria-label': 'Search your phone',
-                            }}
-                        /> */}
+                        <Search className="w-full" />
                     </Stack>
                     <Stack
                         className='w-1/2'
@@ -136,21 +116,20 @@ const Hero: React.FC = () => {
                                     outlineColor: '#6650a4',
                                     boxShadow: `0 0 8px 8px ${alpha('#CCC2DC', 0.5)}`
                                 }}
+                                onClick={() => { router.push(`/${img}`) }}
                             >
                                 <Image src={`${s3BaseUrl}/brand-images/${img}.jpg`} alt='brand-image' width={50} height={50} />
                             </Box>
                         ))}
                     </Stack>
                     <Stack
-                        className='w-1/2 ransition-transform duration-300 animate-bounce'
+                        className='w-1/2 transition-transform duration-300 animate-bounce'
                         alignSelf="center"
                         color="text.secondary"
                         lineHeight={0.8}
                     >
-                        
                         <a onClick={() => scrollToSection('brands')} className='self-center hover:cursor-pointer text-shadow'>More brands</a>
-                        <a onClick={()=>scrollToSection('brands')} className='self-center hover:cursor-pointer text-4xl'><ExpandMore className='self-center hover:cursor-pointer text-4xl' /></a>
-                        
+                        <a onClick={() => scrollToSection('brands')} className='self-center hover:cursor-pointer text-4xl'><ExpandMore className='self-center hover:cursor-pointer text-4xl' /></a>
                     </Stack>
                 </Stack>
             </Container>
@@ -160,7 +139,7 @@ const Hero: React.FC = () => {
                 className='bg-background p-5'
                 justifyContent="center"
             >
-                <span className='text-white text-center bg-primary rounded-full flex self-center py-2 px-3 mb-6 text-3xl'>Just in 3 steps sell you phone</span>
+                <span className='text-white text-center bg-primary rounded-full flex self-center py-2 px-3 mb-6 text-3xl'>Just in 3 steps sell your phone</span>
                 <Stack
                     direction={{ sm: 'column', md: 'row' }}
                     justifyContent="space-around"
@@ -225,7 +204,6 @@ const Hero: React.FC = () => {
                             alignItems: 'center',
                             display: 'flex',
                             flexDirection: 'column'
-                            
                         }}
                     >
                         <Box
@@ -246,27 +224,26 @@ const Hero: React.FC = () => {
                     </Box>
                 </Stack>
             </Stack>
-            <hr  className='mt-5'/>
+            <hr className='mt-5' />
             <div id="brands" className='my-5 flex text-center justify-center text-primary text-xl'>Brands we buy</div>
-            <hr/>
             <Box
                 className="container mx-auto mt-6"
                 id="image"
                 sx={(theme) => ({
-                        display:'grid',
+                    display: 'grid',
                     mt: { xs: 8, sm: 10 },
-                        mb: 10,
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-                        gridAutoRows: 'minmax(100px, auto)',
-                        gap: 2,
-                        padding:4,
-                        alignSelf: 'center',
-                        height: 'auto',
-                        width: '100%',
-                        
-                    })}
+                    mb: 10,
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                    gridAutoRows: 'minmax(100px, auto)',
+                    gap: 2,
+                    padding: 4,
+                    alignSelf: 'center',
+                    height: 'auto',
+                    width: '100%',
+
+                })}
             >
-                {allBrands.map((brand: any) => (
+                {allBrands.map((brand: Brand) => (
                     <Grid key={brand.id}>
                         <Box
                             key={brand.id}
@@ -274,14 +251,15 @@ const Hero: React.FC = () => {
                             sx={{
                                 height: '100%',
                                 display: 'flex',
-                                alignItems:'center',
+                                alignItems: 'center',
                                 backgroundSize: 'cover',
-                                flexDirection:'column',
+                                flexDirection: 'column',
                                 borderRadius: '8px',
                                 outline: '1px dashed',
                                 outlineColor: '#6650a4',
                                 boxShadow: `0 0 5px 5px ${alpha('#CCC2DC', 0.5)}`
                             }}
+                            onClick={() => { router.push(`/${brand.code}`) }}
                         >
                             <Image alt='brand-image' width={100} height={100} src={`${s3BaseUrl}/brand-images/${brand.code}.jpg`} />
                         </Box>

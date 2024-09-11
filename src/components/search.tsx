@@ -1,4 +1,3 @@
-// components/Search.tsx
 import React, { useState, useEffect } from 'react';
 import {
     TextField, List, ListItem, ListItemText,
@@ -9,6 +8,7 @@ import axios from 'axios';
 import {debounce} from 'lodash';
 import { baseUrl, version } from '@/config/config';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useRouter } from 'next/navigation';
 
 interface Product {
     _id: string;
@@ -17,6 +17,7 @@ interface Product {
     variantName: string;
     modelVariant: string;
     quoteValue: number;
+    productName: string;
 }
 
 interface SearchProps {
@@ -33,6 +34,7 @@ interface Response {
 const Search: React.FC<SearchProps> = ({className}) => {
     const [query, setQuery] = useState<string>('');
     const [results, setResults] = useState<Product[]>([]);
+    const router = useRouter();
 
     useEffect(() => {
         if (query.trim() === '') {
@@ -67,6 +69,10 @@ const Search: React.FC<SearchProps> = ({className}) => {
         setResults([]);
     };
 
+    const handleClick = (phone:any) => {
+        const params = new URLSearchParams({ id: phone._id });
+        router.push(`/${phone.brandName.toLowerCase()}/${phone.modelName}?${params.toString()}`);
+    }
     return (
         <div className={className}>
             <TextField
@@ -104,9 +110,9 @@ const Search: React.FC<SearchProps> = ({className}) => {
                 >
                     <List>
                         {results.map((product) => (
-                            <ListItem key={product._id}>
+                            <ListItem className="hover:cursor-pointer" onClick={()=> handleClick(product)} key={product._id}>
                                 <ListItemAvatar>
-                                    <Avatar src={product.productImage} alt={product.brandName} />
+                                    <Avatar src={product.productImage} alt={product.productName} />
                                 </ListItemAvatar>
                                 <ListItemText
                                     className='text-primary pl-0'

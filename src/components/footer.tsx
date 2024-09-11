@@ -45,6 +45,7 @@ const Footer: FC = () => {
                         <Box className="flex justify-center custom-sm:justify-start" >
                             <Image
                                 width={250}
+                                height={100}
                                 src={
                                     '/playstore.webp'
                                 }

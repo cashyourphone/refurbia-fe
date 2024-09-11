@@ -4,6 +4,10 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ThemeProviderWrapper from "@/components/themeProviderWrapper";
+import { Provider } from 'react-redux';
+import { makeStore } from './store';
+import StoreProvider from "./storeProvider";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,11 +35,13 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProviderWrapper>
         <Header />
-        <main className="mt-20">
-          {children}
+          <main className="mt-20">
+            <StoreProvider>
+              {children}
+            </StoreProvider>
         </main>
           <Footer />
-        </ThemeProviderWrapper>
+          </ThemeProviderWrapper>
       </body>
     </html>
   );

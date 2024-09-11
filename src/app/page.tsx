@@ -1,9 +1,14 @@
 import Hero from "@/components/hero";
-
-export default function Home() {
+import { baseUrl, version } from '@/config/config';
+import { FC } from "react";
+ const Home:FC = async ()=> {
+   const response = await fetch(`${baseUrl}/${version}/mobile/get-brands`);
+   const { data } = await response.json();
   return (
     <>
-      <Hero />
+      <Hero allBrands={data}/>
     </>
   );
 }
+
+export default Home;
