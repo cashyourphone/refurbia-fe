@@ -19,11 +19,12 @@ const Header: FC = () => {
     const router = useRouter();
     const pathname = usePathname();
     const isHome = pathname === '/';
+    const isUserLoggedIn = isLoggedIn()
 
     useEffect(() => {
         const loggedInStatus = isLoggedIn();
         setLoggedIn(loggedInStatus);
-    }, [localStorage.getItem('access_token')])
+    }, [isUserLoggedIn])
     
     const handleClick = () => {
         setIsOpen(prev => !prev)
