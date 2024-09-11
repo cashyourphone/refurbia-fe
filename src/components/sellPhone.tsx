@@ -6,6 +6,17 @@ import { ExpandMore } from "@mui/icons-material";
 import { Accordion, AccordionSummary, AccordionDetails, TextField, Typography, Button, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
+import { styled } from '@mui/material/styles';
+
+const NoSpinnerTextField = styled(TextField)({
+    '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button': {
+        WebkitAppearance: 'none',
+        margin: 0,
+    },
+    '& input[type="number"]': {
+        MozAppearance: 'textfield',
+    },
+});
 
 interface SellMobileProps {
     handleOrderCreate: (order: OrderData) => Promise<void>
@@ -136,7 +147,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                     onChange={handleAddressChange}
                                     fullWidth
                                 />
-                                <TextField
+                                <NoSpinnerTextField
                                     label="Pincode"
                                     name="pincode"
                                     type="number"
@@ -148,7 +159,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                     }}
                                     onInput={handleInput}
                                     value={address?.pincode}
-                                    onChange={(e) => handleAddressChange(e.target.value)}
+                                    onChange={(e) => handleAddressChange(e?.target?.value)}
                                     fullWidth
                                 />
                                 <Button disabled={!(address?.address && address?.name && address?.pincode?.toString().length === 6)} variant="contained" color="primary" onClick={handleAddressSubmit}>
