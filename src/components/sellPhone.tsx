@@ -118,21 +118,21 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                 <TextField
                                     label="Address"
                                     name="address"
-                                    value={address.address}
+                                    value={address?.address}
                                     onChange={handleAddressChange}
                                     fullWidth
                                 />
                                 <TextField
                                     label="Landmark (optional)"
                                     name="landmark"
-                                    value={address.landmark}
+                                    value={address?.landmark}
                                     onChange={handleAddressChange}
                                     fullWidth
                                 />
                                 <TextField
                                     label="Locality (optional)"
                                     name="locality"
-                                    value={address.locality}
+                                    value={address?.locality}
                                     onChange={handleAddressChange}
                                     fullWidth
                                 />
@@ -147,7 +147,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                         },
                                     }}
                                     onInput={handleInput}
-                                    value={address.pincode}
+                                    value={address?.pincode}
                                     onChange={(e) => handleAddressChange(e.target.value)}
                                     fullWidth
                                 />
