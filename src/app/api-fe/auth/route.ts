@@ -16,10 +16,10 @@ export async function POST(req: NextRequest) {
     try {
         const response = await axios.post(url, credentials);
         const data = response.data;
-        const cookie = cookies()
-        cookie.set('token', data.data.access_token, { httpOnly: true, maxAge: 60 * 60 * 24 });
 
-        return NextResponse.json({ message: 'Login successful', data: data.data },{status:200});
+        const res = NextResponse.json({ message: 'Login successful', data: data.data }, { status: 200 });
+        res.cookies.set('token', data.data.access_token, { httpOnly: true, maxAge: 60 * 60 * 24 });
+        return res;
     } catch (error) {
         return NextResponse.json({ message: 'Login failed', error },{status:500});
     }
