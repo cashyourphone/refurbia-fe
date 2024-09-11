@@ -161,7 +161,7 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                                         }}
                                         onInput={handleInput}
                                         value={imei}
-                                        onChange={(e) => handleImeaChange(e.target.value)}
+                                        onChange={(e) => handleImeaChange(e?.target?.value)}
                                         fullWidth
                                         placeholder="Enter youe IMEA number"
                                         variant="outlined"

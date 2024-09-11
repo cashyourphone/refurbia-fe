@@ -27,17 +27,25 @@ interface PaymentDetails {
     upiId: string;
 }
 
+export interface AddressForm {
+    name: string;
+    address: string;
+    landmark: string;
+    locality: string;
+    pincode: string;
+}
+
 const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
     const [payment, setPayment] = useState<PaymentDetails>({ upiId: "", paymentMethod: 'cash' });
-    const [address, setAddress] = useState<Address>({ name: "", address: "", locality: "", landmark: "", pincode: NaN });
+    const [address, setAddress] = useState<AddressForm>({ name: "", address: "", locality: "", landmark: "", pincode: "" });
     const [expanded, setExpanded] = useState<string | false>('addressPanel');
     const router = useRouter()
     const dispatch = useAppDispatch();
     const mobileSelector = useAppSelector((state) => state?.mobile?.mobileData);
-    const orderSelector = useAppSelector((state) => state.order.orderData);
+    const orderSelector = useAppSelector((state) => state?.order?.orderData);
 
     useEffect(() => {
-        setAddress(orderSelector?.address as Address);
+        setAddress({...orderSelector?.address , pincode:address?.pincode?.toString()}as AddressForm);
     }, [])
 
     const handleAccordionChange =
@@ -48,29 +56,20 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
     const handleAddressChange = (e: any) => {
         setAddress({
             ...address,
-            [e?.target?.name]: e.target.value,
+            [e?.target?.name]: e?.target?.value,
         });
     };
 
     const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPayment({
             ...payment,
-            [e?.target?.name]: e.target.value,
+            [e?.target?.name]: e?.target?.value,
         });
-    };
-
-    const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
-        const target = e.target as HTMLInputElement;
-        const value = target.value;
-
-        if (value.length > 6) {
-            target.value = value.slice(0, 6);
-        }
     };
 
     const handleAddressSubmit = () => {
         dispatch(setOrderData({
-            address: address,
+            address: {...address, pincode: parseInt(address.pincode)},
             mobileDetails: mobileSelector as MobileDetails,
             ...orderSelector
         }))
@@ -147,22 +146,21 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                     onChange={handleAddressChange}
                                     fullWidth
                                 />
-                                <NoSpinnerTextField
+                                <TextField
                                     label="Pincode"
                                     name="pincode"
                                     type="number"
                                     InputProps={{
                                         inputProps: {
-                                            maxLength: 6, // Note: This doesn't work with type="number" in all browsers
-                                            pattern: "\\d*", // Allows only digits
+                                            maxLength: 6,
+                                            pattern: "\\d*"
                                         },
                                     }}
-                                    onInput={handleInput}
                                     value={address?.pincode}
-                                    onChange={(e) => handleAddressChange(e?.target?.value)}
+                                    onChange={handleAddressChange}
                                     fullWidth
                                 />
-                                <Button disabled={!(address?.address && address?.name && address?.pincode?.toString().length === 6)} variant="contained" color="primary" onClick={handleAddressSubmit}>
+                                <Button disabled={!(address?.address && address?.name && address?.pincode?.length === 6)} variant="contained" color="primary" onClick={handleAddressSubmit}>
                                     Save Address
                                 </Button>
                             </div>
