@@ -59,7 +59,7 @@ const PhoneLoginModal = ({ open, onClose }: { open: boolean, onClose: () => void
         const formData = new FormData(event.target as HTMLFormElement);
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
-        const response = await fetch('/api/auth', {
+        const response = await fetch('/api-fe/auth', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
