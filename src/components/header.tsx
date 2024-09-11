@@ -23,7 +23,7 @@ const Header: FC = () => {
     useEffect(() => {
         const loggedInStatus = isLoggedIn();
         setLoggedIn(loggedInStatus);
-    }, [isLoggedIn()]);
+    }, [localStorage.getItem('access_token')])
     
     const handleClick = () => {
         setIsOpen(prev => !prev)
