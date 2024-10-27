@@ -22,7 +22,13 @@ export interface Address {
 }
 
 export interface PaymentDetails {
-    upiId: string;
+    upiId?: string;
+    bankDetails?: {
+        bankName: string,
+        accountNumber: string,
+        accountName: string,
+        ifscCode: string
+    }
 }
 
 export interface OrderData {
@@ -32,4 +38,10 @@ export interface OrderData {
     exactQuote?: number;
     address?: Address;
     paymentDetails?: PaymentDetails;
+}
+
+export interface UserDetails {
+    name: string,
+    mobileNumber: number,
+    email: string
 }

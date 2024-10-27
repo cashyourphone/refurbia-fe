@@ -19,7 +19,7 @@ const Header: FC = () => {
     const router = useRouter();
     const pathname = usePathname();
     const isHome = pathname === '/';
-    const isUserLoggedIn = isLoggedIn()
+    const isUserLoggedIn = isLoggedIn();
 
     useEffect(() => {
         const loggedInStatus = isLoggedIn();
@@ -42,6 +42,12 @@ const Header: FC = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
+
+    const handleLogout = () => {
+        localStorage.clear();
+        router.replace('/')
+        setLoggedIn(false)
+    }
 
     const items: any = [
         {
@@ -96,7 +102,7 @@ const Header: FC = () => {
 
     const getLoginProfileButton = () => {
         if (loggedIn) {
-            return (<Chip onClick={handleOpenModal} label="Profile" className='text-white w-20 border-white' variant="outlined" />)
+            return (<Chip onClick={() => router.push('/profile')} label="Profile" className='text-white w-20 border-white' variant="outlined" />)
         } else {
             return (<Chip onClick={handleOpenModal} label="Login" className='text-white w-20 border-white' variant="outlined" />)
         }
@@ -144,6 +150,9 @@ const Header: FC = () => {
                         <li className='pt-4 md:pt-0'>{
                              getLoginProfileButton()   
                         }</li>
+                       {loggedIn && <li className='pt-4 md:pt-0'>{
+                            <Chip onClick={handleLogout} label="Log Out" className='text-white w-20 border-white' variant="outlined" />
+                        }</li>}
                     </ul>
                 </Collapse>
                 <LoginModal open={isModalOpen} onClose={handleCloseModal} />

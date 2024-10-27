@@ -39,21 +39,27 @@ const Legal: React.FC = () => {
         switch (initialPolicy) {
             case 'tnc':
                 setValue(0);
+                setExpanded('tnc');
                 break;
             case 'privacy':
                 setValue(1);
+                setExpanded('privacy');
                 break;
             case 'refund':
                 setValue(2);
+                setExpanded('refund');
                 break;
             case 'shipping':
                 setValue(3);
+                setExpanded('shipping');
                 break;
             case 'warranty':
                 setValue(4);
+                setExpanded('warranty');
                 break;
             default:
                 setValue(0);
+                setExpanded('tnc');
         }
     }, [initialPolicy]);
 

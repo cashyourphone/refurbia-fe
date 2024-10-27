@@ -25,6 +25,12 @@ interface SellMobileProps {
 interface PaymentDetails {
     paymentMethod: string;
     upiId: string;
+    bankDetails: {
+        bankName: string,
+        accountNumber: string,
+        accountName: string,
+        ifscCode: string
+    }
 }
 
 export interface AddressForm {
@@ -36,7 +42,15 @@ export interface AddressForm {
 }
 
 const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
-    const [payment, setPayment] = useState<PaymentDetails>({ upiId: "", paymentMethod: 'cash' });
+    const [payment, setPayment] = useState<PaymentDetails>({
+        upiId: "", paymentMethod: 'cash',
+        bankDetails: {
+            bankName: '',
+            accountNumber: '',
+            accountName: '',
+            ifscCode: ''
+        }
+    });
     const [address, setAddress] = useState<AddressForm>({ name: "", address: "", locality: "", landmark: "", pincode: "" });
     const [expanded, setExpanded] = useState<string | false>('addressPanel');
     const router = useRouter()
@@ -61,17 +75,36 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
     };
 
     const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPayment({
-            ...payment,
-            [e?.target?.name]: e?.target?.value,
-        });
+        const { name, value } = e.target;
+        if (name === 'paymentMethod') {
+            setPayment({
+                ...payment,
+                paymentMethod: value,
+                upiId: value === 'upi' ? payment.upiId : '', // Clear UPI ID if switching to bank
+                bankDetails: value === 'bank' ? payment.bankDetails : {bankName:'',accountName:'',accountNumber:'',ifscCode:''} // Clear bank details if switching to UPI
+            });
+        } else if (payment.paymentMethod === 'upi') {
+            setPayment({
+                ...payment,
+                upiId: value
+            });
+        } else if (payment.paymentMethod === 'bank') {
+            setPayment(prev => ({
+                ...prev,
+                bankDetails: {
+                    ...prev.bankDetails,
+                    [name]: value
+                }
+            }));
+        }
+        
     };
 
     const handleAddressSubmit = () => {
         dispatch(setOrderData({
-            address: {...address, pincode: parseInt(address.pincode)},
+            ...orderSelector,
+            address: { ...address, pincode: parseInt(address.pincode) },
             mobileDetails: mobileSelector as MobileDetails,
-            ...orderSelector
         }))
         setExpanded('paymentPanel')
     };
@@ -79,9 +112,8 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
     const handleSellNow = async () => {
         const orderDetails: OrderData = {
             ...orderSelector,
-            paymentDetails: payment
+            paymentDetails: payment.bankDetails.accountName ? {bankDetails: payment.bankDetails} : {upiId: payment.upiId}
         }
-
         const orderResponse: any = await handleOrderCreate(orderDetails);
         if (orderResponse?.status === 200) {
             router.push('/order')
@@ -182,7 +214,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                     value={payment.paymentMethod}
                                     onChange={handlePaymentChange}
                                 >
-                                    <FormControlLabel value="cash" control={<Radio />} label="Cash" />
+                                    <FormControlLabel value="bank" control={<Radio />} label="Bank Transfer" />
                                     <FormControlLabel value="upi" control={<Radio />} label="UPI" />
                                 </RadioGroup>
 
@@ -196,12 +228,48 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                         fullWidth
                                     />
                                 )}
+                                {payment.paymentMethod === 'bank' && (
+                                    <>
+                                    <TextField
+                                        label="Bank name"
+                                        name="bankName"
+                                        value={payment.bankDetails.bankName}
+                                        onChange={handlePaymentChange}
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        label="Account number"
+                                        name="accountNumber"
+                                        value={payment.bankDetails.accountNumber}
+                                        onChange={handlePaymentChange}
+                                        fullWidth
+                                        />
+                                        <TextField
+                                            label="IFSC code"
+                                            name="ifscCode"
+                                            value={payment.bankDetails.ifscCode}
+                                            onChange={handlePaymentChange}
+                                            fullWidth
+                                        />
+                                        <TextField
+                                            label="Account name"
+                                            name="accountName"
+                                            value={payment.bankDetails.accountName}
+                                            onChange={handlePaymentChange}
+                                            fullWidth
+                                        />
+                                    </>
+                                )}
 
                             </div>
                         </AccordionDetails>
                     </Accordion>
                     <div className="flex p-5 flex-col">
-                        <Button disabled={payment.paymentMethod === 'upi' && payment.upiId === ''} variant="contained" onClick={handleSellNow}>Sell Now</Button>
+                        <Button
+                            disabled={
+                                (payment.paymentMethod === 'upi' && payment.upiId === '') ||
+                                (payment.paymentMethod === 'bank' && !Object.values(payment.bankDetails).every(value => value !== undefined && value !== null && value !== ''))
+                            } variant="contained" onClick={handleSellNow}>Sell Now</Button>
                     </div>
                 </div>
             </div>

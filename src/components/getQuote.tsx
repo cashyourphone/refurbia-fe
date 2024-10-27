@@ -1,6 +1,6 @@
 'use client';
-import { Box, Button, Divider, Drawer, FormControlLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Radio, RadioGroup, Slide, Step, StepLabel, Stepper, TextField } from "@mui/material";
-import { AwaitedReactNode, FC, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import { Box, Button, Drawer, FormControlLabel,  Radio, RadioGroup, Step, StepLabel, Stepper, TextField } from "@mui/material";
+import {  FC, useState } from "react";
 import LoginModal from "./loginModal";
 import { isLoggedIn } from "@/utils/auth";
 import { Close } from "@mui/icons-material";
@@ -65,7 +65,7 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
         setAnswers({ ...answers, [questionId]: answer });
     };
 
-    const handleImeaChange = (value: any) => {
+    const handleImeiChange = (value: any) => {
         setImeiNumber(value)
     }
 
@@ -150,7 +150,7 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                             {
                                 questionNumber === questions.length &&
                                 <div key={questionNumber + 1} className="w-full flex-shrink-0">
-                                    <h3 className="text-lg border-primary border-dashed border-2 p-2 text-center font-bold">Enter your IMEA number</h3>
+                                    <h3 className="text-lg border-primary border-dashed border-2 p-2 text-center font-bold">Enter your IMEI number</h3>
                                     <NoSpinnerTextField
                                         type="number"
                                         InputProps={{
@@ -161,12 +161,12 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                                         }}
                                         onInput={handleInput}
                                         value={imei}
-                                        onChange={(e) => handleImeaChange(e?.target?.value)}
+                                        onChange={(e) => handleImeiChange(e?.target?.value)}
                                         fullWidth
-                                        placeholder="Enter youe IMEA number"
+                                        placeholder="Enter youe IMEI number"
                                         variant="outlined"
                                         className="mt-8"
-                                        helperText="Dial *#06# into your phone dialpad to get your IMEA"
+                                        helperText="Dial *#06# into your phone dialpad to get your IMEI"
                                     />
                                 </div>
 

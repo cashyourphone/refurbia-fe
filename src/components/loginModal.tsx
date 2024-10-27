@@ -31,7 +31,7 @@ const PhoneLoginModal = ({ open, onClose }: { open: boolean, onClose: () => void
     const [phoneNumber, setPhoneNumber] = useState('');
     const [checked, setChecked] = useState(false);
     const [step, setStep] = useState(1);
-    const [isEmailExist, setEmailExist] = useState(true);
+    const [isEmailExist, setEmailExist] = useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
     const router = useRouter();
     useEffect(() => {
@@ -43,7 +43,6 @@ const PhoneLoginModal = ({ open, onClose }: { open: boolean, onClose: () => void
         const response = await fetch(`${baseUrl}/${version}/check-number/${phoneNumber}`);
 
         const data = await response.json();
-
         if (data.isExist) {
             setEmailExist(data.email)
             setStep(2)
@@ -134,8 +133,9 @@ const PhoneLoginModal = ({ open, onClose }: { open: boolean, onClose: () => void
                                 <TextField
                                     fullWidth
                                     label="Enter your Email"
-                                        variant="outlined"
+                                    variant="outlined"
                                         name='email'
+                                        helperText="If ever logged in with mobile app use that email id"
                                     className={isEmailExist ? 'hidden' : 'mb-4'}
                                 />
                                 <TextField
