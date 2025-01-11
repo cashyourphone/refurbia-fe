@@ -10,11 +10,11 @@ import { setMobileData, setOrderData } from "@/app/slice/orderSlice";
 interface ModelProps {
     data: any;
     modelName: string;
-    questions: any;
+    getAllQuestions: ()=>Promise<[]>;
     handleSubmit: (value: any) => Promise<{status:number, data:any}>;
 }
 
-const ModelComponent: FC<ModelProps> = ({ data, modelName, handleSubmit, questions }) => {
+const ModelComponent: FC<ModelProps> = ({ data, modelName, handleSubmit, getAllQuestions }) => {
     const [quoteData, setQuoteData] = useState<{ status: number, data: any }>()
     const dispatch = useAppDispatch()
     const orderSelector = useAppSelector((state)=> state.order.orderData)
@@ -66,7 +66,7 @@ const ModelComponent: FC<ModelProps> = ({ data, modelName, handleSubmit, questio
                                 Please note that the displayed price may vary depending on the condition of the device. We will give you a final quote after a thorough device inspection.
                             </Typography>
                             <div className="flex p-4 justify-center">
-                                <GetQuote questions={questions} handleSubmit={handleQuestionSubmit} brandName={data?.brandName} isQuoteAvailable={quoteData?.status === 200} />
+                                <GetQuote getAllQuestions={getAllQuestions} handleSubmit={handleQuestionSubmit} brandName={data?.brandName} isQuoteAvailable={quoteData?.status === 200} />
                             </div>
                         </CardContent>
                     </Box>

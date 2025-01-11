@@ -1,8 +1,7 @@
 'use client';
 import { Box, Button, Drawer, FormControlLabel,  Radio, RadioGroup, Step, StepLabel, Stepper, TextField } from "@mui/material";
-import {  FC, useState } from "react";
+import {  FC, useEffect, useState } from "react";
 import LoginModal from "./loginModal";
-import { isLoggedIn } from "@/utils/auth";
 import { Close } from "@mui/icons-material";
 import { styled } from '@mui/material/styles';
 import { useRouter } from "next/navigation";
@@ -19,22 +18,30 @@ const NoSpinnerTextField = styled(TextField)({
 });
 
 interface GetQuoteProps {
-    questions: any,
+    getAllQuestions: ()=> Promise<[]>,
     handleSubmit: (value: any) => Promise<void>;
     isQuoteAvailable: boolean,
     brandName: string
 }
 
-const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleSubmit, brandName }) => {
+const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handleSubmit, brandName }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDrawerOpen, setDrawerOpen] = useState(false);
     const [activeStep, setActiveStep] = useState(0);
-    const [allQuestions, setAllQuestions] = useState(questions.map((q: any) => ({ ...q, isAnswered: false })));
+    const [allQuestions, setAllQuestions] = useState([]);
     const [answers, setAnswers] = useState<{ [key: string]: string }>({});
     const [questionNumber, setQuestionNumber] = useState(0);
     const [imei, setImeiNumber] = useState('');
     const router = useRouter()
     const authSelector = useAppSelector((state) => state.auth)
+
+    useEffect(() => {
+        getAllQuestions().then(question => {
+             setAllQuestions(question)
+        }).catch(err => {
+            console.log(err)
+        })
+    },[])
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -131,7 +138,7 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                 <div className="w-full p-8">
                     {/* Stepper */}
                     <Stepper activeStep={activeStep} alternativeLabel>
-                        {questions.map((q: any, index: number) => (
+                        {allQuestions.map((q: any, index: number) => (
                             <Step key={q.questionId}>
                                 <StepLabel>{index + 1}</StepLabel>
                             </Step>
@@ -193,7 +200,7 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                             Back
                         </Button>
                         {
-                            allQuestions[activeStep]?.isAnswered && (
+                            allQuestions[activeStep]?.['isAnswered'] && (
                                 <Button variant="contained"  color="primary" onClick={()=> handleNext()}>
                                     Next
                                 </Button>

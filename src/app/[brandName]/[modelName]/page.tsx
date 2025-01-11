@@ -23,16 +23,19 @@ const Model: FC<ModleProps> = async ({ params, searchParams }) => {
     const { data } = await response.json();
     const cookie = cookies();
     const tokenObj = cookie.get('token');
-    if (!!tokenObj?.value) {
-        const questionResponse = await fetch(`${baseUrl}/${version}/all-questions?userType=customer`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization':`Bearer ${tokenObj?.value}`
-            }
-        })
+    const getAllQuestions = async () => {
+        'use server'
+        if (!!tokenObj?.value) {
+            const questionResponse = await fetch(`${baseUrl}/${version}/all-questions?userType=customer`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenObj?.value}`
+                }
+            })
 
-        const questionData = await questionResponse.json()
-        questions = questionData.data
+            const questionData = await questionResponse.json()
+            return questionData.data
+        }
     }
     const handleSubmit = async(value:any) => {
         'use server';
@@ -53,7 +56,7 @@ const Model: FC<ModleProps> = async ({ params, searchParams }) => {
        return await exactQuoteResposne.json();
     }
     return (
-        <ModelComponent modelName={modelName} data={data} handleSubmit={handleSubmit} questions={questions} />
+        <ModelComponent modelName={modelName} data={data} handleSubmit={handleSubmit} getAllQuestions={getAllQuestions} />
     )
 }
 
