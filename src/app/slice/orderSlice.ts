@@ -11,6 +11,16 @@ interface MobileState {
     mobileData: MobileDetails | null;
 }
 
+interface AuthState {
+    isAuthenticated: boolean;
+    token: string | null;
+}
+
+const initialAuthState: AuthState = {
+    isAuthenticated: false,
+    token: null,
+};
+
 const initialOrderState: OrderState = {
     orderData: null,
 };
@@ -20,6 +30,20 @@ const initialMobileState: MobileState = {
 };
 
 
+const authSlice = createSlice({
+    name: 'auth',
+    initialState: initialAuthState,
+    reducers: {
+        login: (state, action: PayloadAction<AuthState>) => {
+            state.isAuthenticated = action.payload.isAuthenticated;
+            state.token = action.payload.token;
+        },
+        logout: (state) => {
+            state.isAuthenticated = false;
+            state.token = null;
+        },
+    },
+});
 
 const orderSlice = createSlice({
     name: 'order',
@@ -47,6 +71,7 @@ const mobileSlice = createSlice({
     },
 });
 
+export const { login, logout } = authSlice.actions;
 export const { setOrderData, cleaOrderData } = orderSlice.actions;
 export const { setMobileData, cleaMobileData } = mobileSlice.actions;
-export default { orderSlice, mobileSlice }
+export default { orderSlice, mobileSlice, authSlice }

@@ -6,6 +6,7 @@ import { isLoggedIn } from "@/utils/auth";
 import { Close } from "@mui/icons-material";
 import { styled } from '@mui/material/styles';
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/lib/hooks";
 
 const NoSpinnerTextField = styled(TextField)({
     '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button': {
@@ -28,10 +29,12 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDrawerOpen, setDrawerOpen] = useState(false);
     const [activeStep, setActiveStep] = useState(0);
+    const [allQuestions, setAllQuestions] = useState(questions.map((q: any) => ({ ...q, isAnswered: false })));
     const [answers, setAnswers] = useState<{ [key: string]: string }>({});
     const [questionNumber, setQuestionNumber] = useState(0);
     const [imei, setImeiNumber] = useState('');
     const router = useRouter()
+    const authSelector = useAppSelector((state) => state.auth)
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -42,7 +45,7 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
     };
 
     const handleGetQuote = () => {
-        if (!isLoggedIn()) {
+        if (!authSelector.isAuthenticated) {
             handleOpenModal()
         } else {
             setDrawerOpen(true)
@@ -50,9 +53,10 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
     }
 
     const handleNext = () => {
-        if (activeStep <= questions.length) {
+        if (activeStep <= allQuestions.length-1) {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
             setQuestionNumber(prev => prev + 1)
+            
         }
     };
 
@@ -63,6 +67,17 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
 
     const handleAnswerChange = (questionId: string, answer: string) => {
         setAnswers({ ...answers, [questionId]: answer });
+        if (activeStep <= allQuestions.length - 1) {
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            setQuestionNumber(prev => prev + 1)
+            setAllQuestions(
+                (prevQuestions: any) =>
+                    prevQuestions.map(((ques: any) =>
+                        questionId === ques.questionId ? { ...ques, isAnswered: true } : ques
+                    ))
+            )
+
+        }
     };
 
     const handleImeiChange = (value: any) => {
@@ -124,7 +139,6 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                     </Stepper>
 
                     <div className="relative mt-8 h-60 overflow-hidden">
-                        {/* This box holds all the questions and slides them */}
                         <Box
                             sx={{
                                 display: 'flex',
@@ -132,14 +146,13 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                                 transform: `translateX(-${activeStep * 100}%)` // Moves the active question into view
                             }}
                         >
-                            {questions.map((question: any, index: number) => (
+                            {allQuestions.map((question: any, index: number) => (
                                 <div key={index} className="w-full flex-shrink-0">
                                     <h3 className="text-lg border-primary border-dashed border-2 p-2 text-center font-bold">{question.question}</h3>
                                     <RadioGroup
                                         className="p-6 pt-3"
                                         value={answers[question.questionId] || ''}
                                         onChange={(e) => handleAnswerChange(question.questionId, e.target.value)}
-                                        onClick={handleNext}
                                     >
                                         {question.options.map((option: string, idx: number) => (
                                             <FormControlLabel key={idx} value={option} control={<Radio />} label={option} />
@@ -148,7 +161,7 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                                 </div>
                             ))}
                             {
-                                questionNumber === questions.length &&
+                                questionNumber === allQuestions.length &&
                                 <div key={questionNumber + 1} className="w-full flex-shrink-0">
                                     <h3 className="text-lg border-primary border-dashed border-2 p-2 text-center font-bold">Enter your IMEI number</h3>
                                     <NoSpinnerTextField
@@ -179,7 +192,14 @@ const GetQuote: FC<GetQuoteProps> = ({ questions = [], isQuoteAvailable, handleS
                         <Button variant="contained" color="primary" disabled={activeStep === 0} onClick={handleBack}>
                             Back
                         </Button>
-                        {activeStep === questions.length && (
+                        {
+                            allQuestions[activeStep]?.isAnswered && (
+                                <Button variant="contained"  color="primary" onClick={()=> handleNext()}>
+                                    Next
+                                </Button>
+                            )
+                        }
+                        {activeStep === allQuestions.length && (
                             <Button variant="contained" disabled={imei.length !== 15} color="primary" onClick={handleSubmitClick}>
                                 Submit
                             </Button>

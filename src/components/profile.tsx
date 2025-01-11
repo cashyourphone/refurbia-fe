@@ -1,5 +1,6 @@
 'use client';
 import { OrderData, UserDetails } from "@/app/type";
+import { useAppSelector } from "@/lib/hooks";
 import { isLoggedIn } from "@/utils/auth";
 import { ExpandMore } from "@mui/icons-material";
 import { Box, Accordion, AccordionSummary, AccordionDetails, Typography, Button, Card, CardContent, CardMedia, Grid, } from "@mui/material";
@@ -24,11 +25,11 @@ const ProfileComponent: FC<Profile> = ({userDetails, handleUserDetails, orders, 
     const [expanded, setExpanded] = useState<string | false>('account');
     const [changedValues, setChangedValues] = useState({});
     const [orderList, setOrderList]= useState(orders)
-    const isUserLoggedIn = isLoggedIn();
     const router = useRouter();
     const [form] = Form.useForm();
+    const authSelector = useAppSelector((state) => state.auth)
     useEffect(() => {
-        if (!isUserLoggedIn) {
+        if (!authSelector.isAuthenticated) {
             router.replace('/')
         }  
         form.setFieldsValue({
@@ -36,7 +37,7 @@ const ProfileComponent: FC<Profile> = ({userDetails, handleUserDetails, orders, 
             mobileNumber: userDetails?.mobileNumber,
             email: userDetails?.email
         })
-    },[isUserLoggedIn])
+    },[authSelector.isAuthenticated])
     const handleAccordionChange = (value: string) => {
         setExpanded(value)
     }

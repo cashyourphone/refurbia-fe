@@ -34,14 +34,14 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ThemeProviderWrapper>
-        <Header />
-          <main className="mt-20">
-            <StoreProvider>
+          <StoreProvider>
+            <Header />
+            <main className="mt-20">
               {children}
-            </StoreProvider>
-        </main>
+            </main>
+          </StoreProvider>
           <Footer />
-          </ThemeProviderWrapper>
+        </ThemeProviderWrapper>
       </body>
     </html>
   );

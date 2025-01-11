@@ -7,6 +7,8 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { usePathname, useRouter } from 'next/navigation';
 import LoginModal from './loginModal';
 import { isLoggedIn } from '@/utils/auth';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { logout } from '@/app/slice/orderSlice';
 
 
 
@@ -17,14 +19,15 @@ const Header: FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
     const router = useRouter();
+    const dispatch = useAppDispatch();
     const pathname = usePathname();
     const isHome = pathname === '/';
-    const isUserLoggedIn = isLoggedIn();
+    const authSelector = useAppSelector((state)=> state.auth)
 
     useEffect(() => {
-        const loggedInStatus = isLoggedIn();
+        const loggedInStatus = authSelector.isAuthenticated;
         setLoggedIn(loggedInStatus);
-    }, [isUserLoggedIn])
+    }, [authSelector.isAuthenticated])
     
     const handleClick = () => {
         setIsOpen(prev => !prev)
@@ -45,6 +48,7 @@ const Header: FC = () => {
 
     const handleLogout = () => {
         localStorage.clear();
+        dispatch(logout());
         router.replace('/')
         setLoggedIn(false)
     }

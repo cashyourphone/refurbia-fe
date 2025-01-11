@@ -39,6 +39,7 @@ export interface AddressForm {
     landmark: string;
     locality: string;
     pincode: string;
+    mobileNumber: string;
 }
 
 const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
@@ -51,7 +52,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
             ifscCode: ''
         }
     });
-    const [address, setAddress] = useState<AddressForm>({ name: "", address: "", locality: "", landmark: "", pincode: "" });
+    const [address, setAddress] = useState<AddressForm>({ name: "", address: "", locality: "", landmark: "", pincode: "", mobileNumber:"" });
     const [expanded, setExpanded] = useState<string | false>('addressPanel');
     const router = useRouter()
     const dispatch = useAppDispatch();
@@ -59,7 +60,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
     const orderSelector = useAppSelector((state) => state?.order?.orderData);
 
     useEffect(() => {
-        setAddress({...orderSelector?.address , pincode:address?.pincode?.toString()}as AddressForm);
+        setAddress({...orderSelector?.address , pincode:address?.pincode?.toString(), mobileNumber: address?.mobileNumber?.toString()}as AddressForm);
     }, [])
 
     const handleAccordionChange =
@@ -103,7 +104,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
     const handleAddressSubmit = () => {
         dispatch(setOrderData({
             ...orderSelector,
-            address: { ...address, pincode: parseInt(address.pincode) },
+            address: { ...address, pincode: parseInt(address.pincode), mobileNumber: parseInt(address.mobileNumber) },
             mobileDetails: mobileSelector as MobileDetails,
         }))
         setExpanded('paymentPanel')
@@ -119,6 +120,16 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
             router.push('/order')
         }
 
+    }
+
+    const checkSellNowDisabled = () => {
+        let result = true
+        if (address && address.address && address.pincode.length === 6 && address.mobileNumber.length === 10 &&
+            (payment.upiId !== '' || (payment.bankDetails.accountName !== '' && payment.bankDetails.accountNumber !== '' && payment.bankDetails.bankName !== '' && payment.bankDetails.ifscCode !== ''))
+        ) {
+           result = false
+        }
+        return result
     }
 
     return (
@@ -192,7 +203,21 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                                     onChange={handleAddressChange}
                                     fullWidth
                                 />
-                                <Button disabled={!(address?.address && address?.name && address?.pincode?.length === 6)} variant="contained" color="primary" onClick={handleAddressSubmit}>
+                                <TextField
+                                    label="Mobile Number"
+                                    name="mobileNumber"
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            maxLength: 10,
+                                            pattern: "\\d*"
+                                        },
+                                    }}
+                                    value={address?.mobileNumber}
+                                    onChange={handleAddressChange}
+                                    fullWidth
+                                />
+                                <Button disabled={!(address?.address && address?.name && address?.pincode?.length === 6 && address?.mobileNumber?.length === 10)} variant="contained" color="primary" onClick={handleAddressSubmit}>
                                     Save Address
                                 </Button>
                             </div>
@@ -267,8 +292,7 @@ const SellMobileComponent: FC<SellMobileProps> = ({ handleOrderCreate }) => {
                     <div className="flex p-5 flex-col">
                         <Button
                             disabled={
-                                (payment.paymentMethod === 'upi' && payment.upiId === '') ||
-                                (payment.paymentMethod === 'bank' && !Object.values(payment.bankDetails).every(value => value !== undefined && value !== null && value !== ''))
+                                checkSellNowDisabled()
                             } variant="contained" onClick={handleSellNow}>Sell Now</Button>
                     </div>
                 </div>

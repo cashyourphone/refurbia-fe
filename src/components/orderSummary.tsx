@@ -82,6 +82,9 @@ const OrderSummaryComponent: FC = () => {
                             <Typography variant="body2" color="textSecondary">
                                 <strong>Pincode:</strong> {orderDetails?.address?.pincode}
                             </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                                <strong>Mobile Number:</strong> {orderDetails?.address?.mobileNumber}
+                            </Typography>
                         </CardContent>
                     </CustomCard>
                     <div className="flex mb-4 flex-col">

@@ -8,6 +8,8 @@ import { baseUrl, version } from '@/config/config';
 import { ArrowBack, Close, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { IconButton, InputAdornment } from '@mui/material';
+import { useAppDispatch } from '@/lib/hooks';
+import { login } from '@/app/slice/orderSlice';
 
 
 const modalStyle = {
@@ -34,6 +36,7 @@ const PhoneLoginModal = ({ open, onClose }: { open: boolean, onClose: () => void
     const [isEmailExist, setEmailExist] = useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
     const router = useRouter();
+    const dispatch = useAppDispatch()
     useEffect(() => {
         setStep(1)
     },[open])
@@ -67,7 +70,10 @@ const PhoneLoginModal = ({ open, onClose }: { open: boolean, onClose: () => void
         });
         const data = await response.json();
         if (data.data) {
-            localStorage.setItem('access_token', data.data.access_token);
+            dispatch(login({
+                isAuthenticated: true,
+                token: data.data.access_token
+            }))
             onClose()
         }
     }

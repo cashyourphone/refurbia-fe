@@ -19,6 +19,7 @@ export interface Address {
     landmark: string;
     locality: string;
     pincode: number;
+    mobileNumber: number;
 }
 
 export interface PaymentDetails {
@@ -38,6 +39,7 @@ export interface OrderData {
     exactQuote?: number;
     address?: Address;
     paymentDetails?: PaymentDetails;
+
 }
 
 export interface UserDetails {
