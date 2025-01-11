@@ -60,7 +60,7 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
     }
 
     const handleNext = () => {
-        if (activeStep <= allQuestions.length-1) {
+        if (activeStep <= allQuestions?.length-1) {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
             setQuestionNumber(prev => prev + 1)
             
@@ -74,7 +74,7 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
 
     const handleAnswerChange = (questionId: string, answer: string) => {
         setAnswers({ ...answers, [questionId]: answer });
-        if (activeStep <= allQuestions.length - 1) {
+        if (activeStep <= allQuestions?.length - 1) {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
             setQuestionNumber(prev => prev + 1)
             setAllQuestions(
@@ -138,7 +138,7 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
                 <div className="w-full p-8">
                     {/* Stepper */}
                     <Stepper activeStep={activeStep} alternativeLabel>
-                        {allQuestions.map((q: any, index: number) => (
+                        {allQuestions?.map((q: any, index: number) => (
                             <Step key={q.questionId}>
                                 <StepLabel>{index + 1}</StepLabel>
                             </Step>
@@ -153,7 +153,7 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
                                 transform: `translateX(-${activeStep * 100}%)` // Moves the active question into view
                             }}
                         >
-                            {allQuestions.map((question: any, index: number) => (
+                            {allQuestions?.map((question: any, index: number) => (
                                 <div key={index} className="w-full flex-shrink-0">
                                     <h3 className="text-lg border-primary border-dashed border-2 p-2 text-center font-bold">{question.question}</h3>
                                     <RadioGroup
@@ -168,7 +168,7 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
                                 </div>
                             ))}
                             {
-                                questionNumber === allQuestions.length &&
+                                questionNumber === allQuestions?.length &&
                                 <div key={questionNumber + 1} className="w-full flex-shrink-0">
                                     <h3 className="text-lg border-primary border-dashed border-2 p-2 text-center font-bold">Enter your IMEI number</h3>
                                     <NoSpinnerTextField
@@ -200,13 +200,13 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
                             Back
                         </Button>
                         {
-                            allQuestions[activeStep]?.['isAnswered'] && (
+                            allQuestions?.[activeStep]?.['isAnswered'] && (
                                 <Button variant="contained"  color="primary" onClick={()=> handleNext()}>
                                     Next
                                 </Button>
                             )
                         }
-                        {activeStep === allQuestions.length && (
+                        {activeStep === allQuestions?.length && (
                             <Button variant="contained" disabled={imei.length !== 15} color="primary" onClick={handleSubmitClick}>
                                 Submit
                             </Button>
