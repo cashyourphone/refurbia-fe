@@ -10,7 +10,7 @@ import { setMobileData, setOrderData } from "@/app/slice/orderSlice";
 interface ModelProps {
     data: any;
     modelName: string;
-    getAllQuestions: ()=>Promise<[]>;
+    getAllQuestions: (token:string|null)=>Promise<[]>;
     handleSubmit: (value: any) => Promise<{status:number, data:any}>;
 }
 

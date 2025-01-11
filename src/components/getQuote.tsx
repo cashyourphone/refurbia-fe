@@ -1,6 +1,6 @@
 'use client';
 import { Box, Button, Drawer, FormControlLabel,  Radio, RadioGroup, Step, StepLabel, Stepper, TextField } from "@mui/material";
-import {  FC, useEffect, useState } from "react";
+import {  FC, useState } from "react";
 import LoginModal from "./loginModal";
 import { Close } from "@mui/icons-material";
 import { styled } from '@mui/material/styles';
@@ -18,7 +18,7 @@ const NoSpinnerTextField = styled(TextField)({
 });
 
 interface GetQuoteProps {
-    getAllQuestions: ()=> Promise<[]>,
+    getAllQuestions: (token:string|null)=> Promise<[]>,
     handleSubmit: (value: any) => Promise<void>;
     isQuoteAvailable: boolean,
     brandName: string
@@ -35,14 +35,6 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
     const router = useRouter()
     const authSelector = useAppSelector((state) => state.auth)
 
-    useEffect(() => {
-        getAllQuestions().then(question => {
-             setAllQuestions(question)
-        }).catch(err => {
-            console.log(err)
-        })
-    },[])
-
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
@@ -55,6 +47,11 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
         if (!authSelector.isAuthenticated) {
             handleOpenModal()
         } else {
+            getAllQuestions(authSelector.token).then(question => {
+                setAllQuestions(question)
+            }).catch(err => {
+                console.log(err)
+            })
             setDrawerOpen(true)
         }
     }

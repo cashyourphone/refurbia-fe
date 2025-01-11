@@ -23,13 +23,13 @@ const Model: FC<ModleProps> = async ({ params, searchParams }) => {
     const { data } = await response.json();
     const cookie = cookies();
     const tokenObj = cookie.get('token');
-    const getAllQuestions = async () => {
+    const getAllQuestions = async (token:string|null) => {
         'use server'
-        if (!!tokenObj?.value) {
+        if (token) {
             const questionResponse = await fetch(`${baseUrl}/${version}/all-questions?userType=customer`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokenObj?.value}`
+                    'Authorization': `Bearer ${token}`
                 }
             })
 
