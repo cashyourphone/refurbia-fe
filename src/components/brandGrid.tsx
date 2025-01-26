@@ -29,7 +29,7 @@ const BrandGrid: FC<any> = ({ phone }) => {
                 onClick={handleClick}
             >
                 <Image alt='brand-image' width={100} height={100} src={`${phone.productImage}`} />
-                <Typography className="text-primary text-center p-2">{phone.modelVariant}</Typography>
+                <Typography className="text-primary text-center p-2">{phone.productName}</Typography>
             </Box>
         </Grid>
     )

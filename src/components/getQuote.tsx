@@ -47,11 +47,13 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
         if (!authSelector.isAuthenticated) {
             handleOpenModal()
         } else {
-            getAllQuestions(authSelector.token).then(question => {
-                setAllQuestions(question)
-            }).catch(err => {
-                console.log(err)
-            })
+            if (allQuestions.length === 0) {
+                getAllQuestions(authSelector.token).then(question => {
+                    setAllQuestions(question)
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
             setDrawerOpen(true)
         }
     }

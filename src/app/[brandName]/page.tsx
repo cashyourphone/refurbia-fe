@@ -16,10 +16,14 @@ interface BrandProps {
 
 const Brand: FC<BrandProps> = async ({ params ,searchParams}) => {
     const { brandName } = params;
-    const response = await fetch(`${baseUrl}/${version}/mobile/get-by-brand/${brandName}`);
+    const response = await fetch(`${baseUrl}/${version}/mobile/search/?text=${brandName}`, {
+        headers: {
+            'Cache-Control': 'no-cache',
+        },
+    });
     const { data } = await response.json();
     const filterData = searchParams?.query ? data.filter((phone: any) => {
-        const name = phone.modelVariant.toLowerCase()
+        const name = phone.productName.toLowerCase()
        return name.includes(searchParams?.query?.toLowerCase())
     }) : data 
     

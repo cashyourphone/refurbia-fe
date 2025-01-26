@@ -61,7 +61,7 @@ const Search: React.FC<SearchProps> = ({className}) => {
     }, [query]);
 
     function removeParentheses(str: string): string {
-        return str.replace(/[()]/g, '');
+        return str?.replace(/[()]/g, '');
     }
 
     const handleClear = () => {
@@ -116,7 +116,7 @@ const Search: React.FC<SearchProps> = ({className}) => {
                                 </ListItemAvatar>
                                 <ListItemText
                                     className='text-primary pl-0'
-                                    primary={removeParentheses(product.modelVariant)}
+                                    primary={removeParentheses(product.productName)}
                                 />
                             </ListItem>
                         ))}
