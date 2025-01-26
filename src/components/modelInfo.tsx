@@ -11,7 +11,7 @@ interface ModelProps {
     data: any;
     modelName: string;
     getAllQuestions: (token:string|null)=>Promise<[]>;
-    handleSubmit: (value: any) => Promise<{status:number, data:any}>;
+    handleSubmit: (value: any, token:string) => Promise<{status:number, data:any}>;
 }
 
 const ModelComponent: FC<ModelProps> = ({ data, modelName, handleSubmit, getAllQuestions }) => {
@@ -20,7 +20,7 @@ const ModelComponent: FC<ModelProps> = ({ data, modelName, handleSubmit, getAllQ
     const orderSelector = useAppSelector((state)=> state.order.orderData)
 
     const handleQuestionSubmit = async (value: any) => {
-        const getExactQuoteData = await handleSubmit(value?.answers)
+        const getExactQuoteData = await handleSubmit(value?.answers, value?.token)
         setQuoteData(getExactQuoteData)
         dispatch(setOrderData({
             imei: value?.imei,

@@ -111,7 +111,7 @@ const GetQuote: FC<GetQuoteProps> = ({ getAllQuestions, isQuoteAvailable, handle
     };
 
     const handleSubmitClick = async () => {
-        await handleSubmit({ answers, imei })
+        await handleSubmit({ answers, imei, token: authSelector.token })
         setDrawerOpen(false)
     }
 

@@ -37,7 +37,7 @@ const Model: FC<ModleProps> = async ({ params, searchParams }) => {
             return questionData.data
         }
     }
-    const handleSubmit = async(value:any) => {
+    const handleSubmit = async(value:any, token:string) => {
         'use server';
         const answersArray = Object.entries(value).map(([questionId, choosedOption]) => ({
             questionId,
@@ -48,7 +48,7 @@ const Model: FC<ModleProps> = async ({ params, searchParams }) => {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${tokenObj?.value}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ initialQuote: data.quoteValue, answers: answersArray})
         })
